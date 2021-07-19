@@ -1,0 +1,195 @@
+{% extends "main_template.html" %}
+{% block hero %}
+<div class="container position-relative text-center text-lg-center mt-5" data-aos="zoom-in" data-aos-delay="100">
+    <div class="row">
+      <p class="h3 text-center m-auto uppercase">
+        {% if data %}
+          {{ data }}
+        {% else %}
+          FACE RECOGNITION
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block pagecss %}
+<link rel="stylesheet" href="/assets/css/uploadcontainer.css">
+<link rel="stylesheet" href="/assets/css/button.css">
+{% endblock %}
+{% block main_box_wrapper %}
+<div class="container mt-5">
+    <div class="row">
+      <div class="row m-auto">
+        <div class="col-12 text-left"> 
+          {% if data %}
+          <div class="row d-flex justify-content">
+            <div class="col-5">
+              <img id="tar_image" src="/{{url}}" alt="Smiley face" class="d-block mx-auto w-100">
+            </div>
+            <div class="col-2">
+              <img src="/assets/img/arrow.png" style="margin-top: 100%;" alt="arrow" class="w-100">
+            </div>
+            <div class="col-5 row">
+              <div id="spinner" class="spinner-border m-auto d-none" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <img id="res_image" src="/{{url}}" alt="Smiley face" class="d-block mx-auto w-100 d-block">
+            </div>
+          </div>
+          <span></span>
+          <div class="row mt-3" style="width: 120%;margin-left: -10%;">
+            <button type="button" onclick="digital_makeup()" class="mx-2 col mt-3 btn">Digital Make up</button>
+            <button type="button" onclick="find_face()" class="mx-2 col mt-3 btn">Face Detection</button>
+            <button type="button" onclick="find_facial_feature()" class="mx-2 col mt-3 btn">Find facial feature</button>
+            <button type="button" onclick="face_recognition()" class="ml-2 mr-4 col mt-3 btn">Face Recognition</button>
+            <form method = "post" enctype="multipart/form-data"> 
+              {% csrf_token %} 
+              {{ form.as_p }} 
+              <button type="submit" class="mx-2 btn col mt-3">Media Upload</button> 
+            </form> 
+          </div>      
+          {% elif video_url %}
+          <video style="width: 100%;" controls class="mt-5">
+            <source src="/{{video_url}}" type="video/mp4">
+          </video>
+          <div class="row col-12">
+            <button type="button" onclick="video_detection()" class="col-5 btn mr-3">Face Detection</button>  
+            <button onclick="location.href='/face_reco/'" class="col-5 btn">Media Upload</button>
+          </div>
+          {% else %}
+          <div id="container" class="m-6 col-12 mt-5 p-5">
+            <form method = "post" enctype="multipart/form-data"> 
+              {% csrf_token %} 
+              <div class="box-input">
+                <svg x="0px" y="0px" viewBox="0 0 64 62" style="enable-background:new 0 0 64 62;" xml:space="preserve">
+                <style type="text/css">
+                  .st0{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+                </style>
+                <g id="spa-launch">
+                  <path class="st0" d="M33,27.1h-8c0,0-2-6-2-12c0-8,6-14,6-14s6,6,6,14C35,21.1,33,27.1,33,27.1z"/>
+                  <line class="st0" x1="29" y1="17.1" x2="29" y2="27.1"/>
+                  <polyline class="st0" points="25,27.1 17,27.1 17,23.1 23.1,17.1 	"/>
+                  <polyline class="st0" points="33,27.1 41,27.1 41,23.1 34.9,17.1 	"/>
+                  <path class="st0" d="M18,41.2c0.5-5.7,5.2-10.1,11-10.1c5.1,0,9.3,3.4,10.6,8.1"/>
+                  <path class="st0" d="M48,41.1c-0.2-3.4-3.1-6-6.5-6c-1.2,0-2.4,0.3-3.3,0.9"/>
+                  <path class="st0" d="M42.3,47.1c0,0-1-4-6-4"/>
+                  <path class="st0" d="M26.3,43.1c-3-1-4,2-4,2s-3-2-5,0s-1,4-1,4"/>
+                  <path class="st0" d="M9,46.1c-0.8-0.6-1.9-1-3-1c-2.8,0-5,2.2-5,5s2.2,5,5,5h46c2.8,0,5-2.2,5-5c0-5-4-9-9-9
+                    c-0.9,0-1.8,0.1-2.6,0.4"/>
+                  <path class="st0" d="M18.8,37.9c-1.1-0.5-2.4-0.8-3.8-0.8c-4.6,0-8.5,3.5-8.9,8"/>
+                </g>
+                </svg>
+                <input type="file" name="emp_image" id="id_emp_image" class="box-file">
+                <label for="id_emp_image"><strong>Choose a file</strong><span class="box-dragndrop"> or drag it here</span>.</label>
+                <button type="submit" class="button">Upload</button>
+              </div>
+                    
+            </form> 
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+{% block pagejs %}
+<script>
+  function digital_makeup(){
+    var tmp  = "{{url}}";
+    $.ajax({
+        url : "/digital_makeup/", // the endpoint
+        type : "GET", // http method
+        data : { tar_image : tmp}, // data sent with the get request
+        success : function(json) {
+          $("#res_image").attr({'src': json});
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+        }
+    });
+  };
+  function find_face(){
+    var tmp  = "{{url}}";
+    $("#spinner").removeClass('d-none');
+    $("#spinner").addClass('d-block');
+    $("#res_image").addClass('d-none');
+    $("#res_image").removeClass('d-block');
+    $.ajax({
+        url : "/find_face/", // the endpoint
+        type : "GET", // http method
+        data : { tar_image : tmp}, // data sent with the get request
+
+        // handle a successful response
+        success : function(json) {
+          $("#res_image").attr({'src': json});
+          $("#spinner").addClass('d-none');
+          $("#spinner").removeClass('d-block');
+          $("#res_image").removeClass('d-none');
+          $("#res_image").addClass('d-block');
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+        }
+    });
+  };
+  function find_facial_feature(){
+    var tmp  = "{{url}}";
+    $.ajax({
+        url : "/find_facial_feature/", // the endpoint
+        type : "GET", // http method
+        data : { tar_image : tmp}, // data sent with the get request
+
+        // handle a successful response
+        success : function(json) {
+          $("#res_image").attr({'src': json});
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+        }
+    });
+  };
+  function face_recognition(){
+    var tmp  = "{{url}}";
+    $("#spinner").removeClass('d-none');
+    $("#spinner").addClass('d-block');
+    $("#res_image").addClass('d-none');
+    $("#res_image").removeClass('d-block');
+    $.ajax({
+        url : "/face_recognition/", // the endpoint
+        type : "GET", // http method
+        data : { tar_image : tmp}, // data sent with the get request
+
+        // handle a successful response
+        success : function(json) {
+          $("#spinner").addClass('d-none');
+          $("#spinner").removeClass('d-block');
+          $("#res_image").removeClass('d-none');
+          $("#res_image").addClass('d-block');
+          $("#res_image").attr({'src': json});
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+        }
+    });
+  };
+  function video_detection(){
+    var tmp  = "{{video_url}}";
+    $.ajax({
+        url : "/video_detection/", // the endpoint
+        type : "GET", // http method
+        data : { tar_image : tmp}, // data sent with the get request
+
+        // handle a successful response
+        success : function(json) {
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+        }
+    });
+  };
+</script>
+{% endblock %}

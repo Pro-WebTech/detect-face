@@ -1,0 +1,144 @@
+#container {
+	box-shadow: 0 4px 8px rgba(0, 0, 0, .75);
+	margin: auto;
+	width: auto;
+  }
+  
+  .box-input {
+	text-align: center;
+  }
+  
+  .box-input svg {
+	width: 5rem;
+	height: 5rem;
+	vertical-align: middle;
+	fill: currentColor;
+  }
+  
+  form {
+	color: #fff;
+  }
+  
+  input[type="button" i],
+  input[type="file" i]::-webkit-file-upload-button {
+	display: none!important;
+  }
+  
+  .box.has-advanced-upload {
+	transition: all .15s ease-in-out, background-color .15s linear;
+  }
+  
+  .box {
+	font-size: 1.25rem;
+	background-color: rgba(0, 142, 198, 1);
+	border: 4px solid #fff;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .75);
+	padding: 5rem 8rem;
+	width: 100%;
+  }
+  
+  .js .box-file {
+	width: .1px;
+	height: .1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+  }
+  
+  .box-input label {
+	margin: auto;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #fff;
+	cursor: pointer;
+	text-align: center;
+	display: block;
+	overflow: hidden;
+  }
+  
+  .js .box-file + label * {
+	pointer-events: none;
+  }
+  
+  .js .box-file:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+  }
+  
+  button {
+	background: #0CE9AF;
+	border: none;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+	color: #fff;
+	display: flex;
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin: auto;
+	margin-top: 2.5rem;
+	overflow: auto;
+	padding: 1rem 1.5rem;
+  }
+  
+  button:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+  }
+  
+  button:active {
+	box-shadow: none;
+  }
+  
+  .box-uploading {
+	font-style: italic;
+  }
+  
+  .box-success {
+	transition: appear-from-inside .25s ease-in-out;
+  }
+  
+  .box__success {
+	animation: appear-from-inside .25s ease-in-out;
+  }
+  
+  @keyframes appear-from-inside {
+	from {
+	  transform: translateY( -50%) scale( 0);
+	}
+	75% {
+	  transform: translateY( -50%) scale( 1.1);
+	}
+	to {
+	  transform: translateY( -50%) scale( 1);
+	}
+  }
+  
+  .box-restart {
+	font-weight: 700;
+  }
+  
+  input,
+  textarea,
+  select {
+	border-radius: 0;
+	border: none;
+  }
+  
+  input {
+	line-height: normal;
+  }
+  
+  .box-dragndrop,
+  .box-icon,
+  .box-uploading,
+  .box-success,
+  .box-error {
+	display: none;
+  }
+  
+  .box.has-advanced-upload .box-dragndrop {
+	display: inline;
+  }
+  
+  strong {
+	color: #fff;
+  }
